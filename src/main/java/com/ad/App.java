@@ -150,4 +150,7 @@ public class App {
         
         em.getTransaction().commit();
     }
+    public static void consulta6_EmpleadosyProyctos(){
+        
+    }
 }
