@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 //import javax.persistence.TypedQuery;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 //import java.util.List;
 
@@ -22,7 +23,7 @@ public class App {
 
     public static void main(String[] args) {
         con = new Connection("EmpleadosDepartamentoProyecto.odb");
-
+        fase1_GuardarObjetos();
         // Descomentar para probar cada fase:
         // fase1_GuardarObjetos();
         // fase2_MostrarElementos();
@@ -43,10 +44,11 @@ public class App {
         em.getTransaction().begin();
 
         // Crear Empleados
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         for (int i = 0; i < 10; i++) {
             Empleado e = new Empleado(
                 Leer.leerTexto("Nombre del empleado: "),
-                LocalDate.parse(Leer.leerTexto("Fecha de contratación (ej: 01/15/1995): ")),
+                LocalDate.parse(Leer.leerTexto("Fecha de contratación (ej: 01/15/1995): "),formatter),
                 new Direccion(
                     Leer.leerTexto("Calle: "),
                     Leer.leerEntero("Número: ")
