@@ -6,9 +6,12 @@ import com.ad.util.Leer;
 
 import javax.persistence.EntityManager;
 //import javax.persistence.TypedQuery;
+import javax.persistence.TypedQuery;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Set;
 
 //import java.util.List;
 
@@ -23,7 +26,29 @@ public class App {
 
     public static void main(String[] args) {
         con = new Connection("EmpleadosDepartamentoProyecto.odb");
-        fase1_GuardarObjetos();
+        int opcion=10;
+        while (opcion !=0 ) {
+                System.out.println("1-Guardar objetos");
+                System.out.println("2-Consulta proyectos sin empleados");
+                System.out.println("3-Empleados sin departamento asignado");
+                System.out.println("4-Empleados contratados en un año concreto");
+                System.out.println("5-Empleado con mayor antigüedad");
+                System.out.println("6-Empleados con número de proyectos en los que trabajan");
+                //System.out.println("7-");
+                //System.out.println("8-");
+                opcion=Leer.leerEntero("Selecciona una opcion: ");
+        
+        switch (opcion) {
+            case 1: fase1_GuardarObjetos(); break;
+            case 2: consulta1_ProyectosSinEmpleados(); break;
+            case 3: consulta2_EmpleadosSinDepartamento(); break;
+            case 4: consulta3_EmpleadosDelAnyo(Leer.leerEntero("Introduzca el año: ")); break;
+            case 5: consulta4_EmpleadoMasAntiguo(); break;
+            case 6: consulta5_EmpleadosYNumeroProyectos(); break;
+            default: 
+        }
+    }
+        //fase1_GuardarObjetos();
         // Descomentar para probar cada fase:
         // fase1_GuardarObjetos();
         // fase2_MostrarElementos();
@@ -45,7 +70,8 @@ public class App {
 
         // Crear Empleados
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        for (int i = 0; i < 10; i++) {
+        int i;
+        for (i = 0; i < 10; i++) {
             Empleado e = new Empleado(
                 Leer.leerTexto("Nombre del empleado: "),
                 LocalDate.parse(Leer.leerTexto("Fecha de contratación (ej: 01/15/1995): "),formatter),
@@ -56,22 +82,20 @@ public class App {
             );
             em.persist(e);
         }
-
         // Crear Departamentos
-        for (int i = 0; i < 2; i++) {
+        for ( i=0; i<3; i++) {
             Departamento d = new Departamento(
                 Leer.leerTexto("Nombre del Departamento: "),
                 Leer.leerTexto("Sede: ")
             );
             em.persist(d);
+            
         }
-
         // Crear Proyectos
-        for (int i = 0; i < 3; i++) {
+        for (i = 0; i < 3; i++) {
             Proyecto p = new Proyecto(Leer.leerTexto("Descripción del Proyecto: "));
             em.persist(p);
         }
-
         em.getTransaction().commit();
     }
 
@@ -86,13 +110,12 @@ public class App {
     public static void consulta1_ProyectosSinEmpleados() {
         EntityManager em = con.getEM();
         em.getTransaction().begin();
-        
-        // TODO: Crear TypedQuery<Proyecto> con JPQL
-        // TypedQuery<Proyecto> tq = em.createQuery("...", Proyecto.class);
-        
-        // TODO: Obtener resultados y mostrarlos
-        
-        em.getTransaction().commit();
+        /*TypedQuery<Empleado> tq = em.createQuery(
+                    "SELECT e FROM Empleado e " +
+                    "WHERE YEAR(e.fechaContrato) = :anyo", Empleado.class);
+          tq.setParameter("anyo", 2025);
+          List<Empleado> losEmpleados = tq.getResultList();  */
+          em.getTransaction().commit();
     }
 
     /**
@@ -152,5 +175,40 @@ public class App {
         
         em.getTransaction().commit();
     }
-    
+    public static void anadirEmpleadosaDepartamentos(){
+        EntityManager em = con.getEM();
+        em.getTransaction().begin();
+    Departamento d = em.find(Departamento.class, 1);
+        TypedQuery<Empleado> tq = em.createQuery(
+                   "Select e FROM Empleado e WHERE YEAR(e.fechaContrato) = :anyo", Empleado.class);
+                    tq.setParameter("anyo", 2026);
+                    List<Empleado> lista = tq.getResultList();
+                    for (Empleado e: lista) {
+                    d.addEmpleado(e);
+                    }
+
+        d = em.find(Departamento.class, 2);
+        tq = em.createQuery(
+                   "Select e FROM Empleado e WHERE YEAR(e.fechaContrato) = :anyo", Empleado.class);
+                    tq.setParameter("anyo", 2025);
+                    lista = tq.getResultList();
+                    for (Empleado e: lista) {
+                    d.addEmpleado(e);
+                    }
+         tq = em.createQuery(
+                "Select e FROM Empleado e WHERE YEAR(e.fechaContrato) < :anyo", Empleado.class);
+                tq.setParameter("anyo", 2025);
+             lista = tq.getResultList();
+             for (Empleado e: lista) {
+                 d.addEmpleado(e);
+             }
+             em.getTransaction().commit();
+            }
 }
+/*TypedQuery<Object[]> tq = em.createQuery(
+                    "SELECT e.nombre, e.fechaContrato, e.direccion.calle, e.direccion.numero " +
+                    "FROM Empleado e " +
+                    "WHERE YEAR(e.fechaContrato) = :anyo", Object[].class);
+                    tq.setParameter("anyo", 2025)
+                    Set<Empleado> losEmpleados =tq.getResultList();
+                    */
