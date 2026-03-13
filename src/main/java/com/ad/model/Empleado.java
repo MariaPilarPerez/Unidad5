@@ -128,17 +128,13 @@ private Departamento departamento;
 
 
     @Override
-    public String toString() {
+    public String toString() {    //No muestro todos los datos asociados, para que no entre en bucle
         return "{" +
             " idEmpleado='" + getIdEmpleado() + "'" +
             ", nombre='" + getNombre() + "'" +
             ", fechaContrato='" + getFechaContrato() + "'" +
-            ", malaActuacion='" + isMalaActuacion() + "'" +
-            ", departamento='" + getDepartamento() + "'" +
-            ", losProyectos='" + getLosProyectos() + "'" +
-            ", direccion='" + getDireccion() + "'" +
-            "}";
-    }
+            ", malaActuacion='" + isMalaActuacion() ;
+    }     
     public void addProyecto(Proyecto p){
             this.losProyectos.add(p);
             p.getLosEmpleados().add(this); // si la relación es bidireccional

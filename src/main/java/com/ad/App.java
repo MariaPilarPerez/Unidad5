@@ -11,7 +11,7 @@ import javax.persistence.TypedQuery;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Set;
+
 
 //import java.util.List;
 
@@ -45,6 +45,7 @@ public class App {
             case 4: consulta3_EmpleadosDelAnyo(Leer.leerEntero("Introduzca el año: ")); break;
             case 5: consulta4_EmpleadoMasAntiguo(); break;
             case 6: consulta5_EmpleadosYNumeroProyectos(); break;
+            //case 7: anadirEmpleadosaDepartamentos(); break;   //ya los he añadido
             default: 
         }
     }
@@ -180,35 +181,35 @@ public class App {
         em.getTransaction().begin();
     Departamento d = em.find(Departamento.class, 1);
         TypedQuery<Empleado> tq = em.createQuery(
-                   "Select e FROM Empleado e WHERE YEAR(e.fechaContrato) = :anyo", Empleado.class);
-                    tq.setParameter("anyo", 2026);
+                   "Select e FROM Empleado e WHERE YEAR(e.fechaContrato) < :anyo", Empleado.class);
+                    tq.setParameter("anyo", 2024);
                     List<Empleado> lista = tq.getResultList();
                     for (Empleado e: lista) {
                     d.addEmpleado(e);
                     }
-
-        d = em.find(Departamento.class, 2);
-        tq = em.createQuery(
+                    System.out.println(d.toString());
+                    System.out.println("Asignados Empleados del año <2024");
+                 d = em.find(Departamento.class, 2);
+                tq = em.createQuery(
                    "Select e FROM Empleado e WHERE YEAR(e.fechaContrato) = :anyo", Empleado.class);
                     tq.setParameter("anyo", 2025);
                     lista = tq.getResultList();
                     for (Empleado e: lista) {
                     d.addEmpleado(e);
                     }
-         tq = em.createQuery(
-                "Select e FROM Empleado e WHERE YEAR(e.fechaContrato) < :anyo", Empleado.class);
-                tq.setParameter("anyo", 2025);
-             lista = tq.getResultList();
-             for (Empleado e: lista) {
-                 d.addEmpleado(e);
-             }
+                  System.out.println(d.toString());
+                  System.out.println("Asignados Empleados del año 2025");
+                 d = em.find(Departamento.class, 3);
+                 tq = em.createQuery(
+                 "Select e FROM Empleado e WHERE YEAR(e.fechaContrato) < :anyo", Empleado.class);
+                 tq.setParameter("anyo", 2025);
+                    lista = tq.getResultList();
+                    for (Empleado e: lista) {
+                         d.addEmpleado(e);
+                     }
+                     System.out.println(d.toString());
+             System.out.println("Asignados Empleados anteriores a 2025");
              em.getTransaction().commit();
             }
+
 }
-/*TypedQuery<Object[]> tq = em.createQuery(
-                    "SELECT e.nombre, e.fechaContrato, e.direccion.calle, e.direccion.numero " +
-                    "FROM Empleado e " +
-                    "WHERE YEAR(e.fechaContrato) = :anyo", Object[].class);
-                    tq.setParameter("anyo", 2025)
-                    Set<Empleado> losEmpleados =tq.getResultList();
-                    */

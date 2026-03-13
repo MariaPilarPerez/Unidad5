@@ -99,6 +99,9 @@ public class Departamento {
             "}";
     }
 
+    
+
+
     public void addEmpleado(Empleado e){
         losEmpleados.add(e);
         e.setDepartamento(this);
