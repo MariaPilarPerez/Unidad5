@@ -46,6 +46,7 @@ public class App {
             case 5: consulta4_EmpleadoMasAntiguo(); break;
             case 6: consulta5_EmpleadosYNumeroProyectos(); break;
             //case 7: anadirEmpleadosaDepartamentos(); break;   //ya los he añadido
+            //case 8: anadeDatosaProyecto(); break;
             default: 
         }
     }
@@ -65,7 +66,7 @@ public class App {
     // =====================================================
     // FASE 1: Guardar objetos (ya implementado)
     // =====================================================
-    public static void fase1_GuardarObjetos() {
+    public static void fase1_GuardarObjetos() {   //ok, esto funciona
         EntityManager em = con.getEM();
         em.getTransaction().begin();
 
@@ -106,31 +107,49 @@ public class App {
 
     /**
      * CONSULTA 1: Proyectos sin empleados asignados
-     * TODO: Implementar query JPQL que devuelva proyectos donde size(losEmpleados)=0
+     * Hecho: Implementar query JPQL que devuelva proyectos donde size(losEmpleados)=0
      */
     public static void consulta1_ProyectosSinEmpleados() {
         EntityManager em = con.getEM();
         em.getTransaction().begin();
-        /*TypedQuery<Empleado> tq = em.createQuery(
-                    "SELECT e FROM Empleado e " +
-                    "WHERE YEAR(e.fechaContrato) = :anyo", Empleado.class);
-          tq.setParameter("anyo", 2025);
-          List<Empleado> losEmpleados = tq.getResultList();  */
-          em.getTransaction().commit();
+        TypedQuery<Proyecto> tq = em.createQuery(
+                    "select p from Proyecto p where p.losEmpleados.size()=0 ", Proyecto.class);
+          List<Proyecto> losProyectos = tq.getResultList();  
+          for(Proyecto p: losProyectos){
+            System.out.println("idProyecto: " + p.getIdProyecto()+
+            "\nNombre Proyecto: "+p.getDescripcion() +"\nDirector Proyecto: ");
+            try {
+                System.out.println(p.getDirectorProyecto().getNombre());
+            } 
+            catch (NullPointerException exc)
+            { 
+                System.out.print("No hay Director de Proyecto");
+            }
+                System.out.println(":  No tiene Empleados asignados");
+            }
+            em.getTransaction().commit();
+        
     }
 
     /**
      * CONSULTA 2: Empleados sin departamento asignado
-     * TODO: Implementar query JPQL que devuelva empleados donde departamento is null
+     * Hecho: Implementar query JPQL que devuelva empleados donde departamento is null
      */
     public static void consulta2_EmpleadosSinDepartamento() {
         EntityManager em = con.getEM();
         em.getTransaction().begin();
-        
-        // TODO: Crear TypedQuery<Empleado> con JPQL
-        
-        // TODO: Obtener resultados y mostrarlos
-        
+        TypedQuery<Empleado> tq=em.createQuery("select e from Empleado e where e.departamento=null",Empleado.class);
+        List<Empleado> empleados = tq.getResultList();
+        if (empleados.size()>0){
+            System.out.println("---Empleados sin departamento asignado---");
+            for(Empleado e: empleados){
+            System.out.println(e.toString());
+            }
+        } else {
+                System.out.println("Todos los empleados tienen departamento asignado");
+            }
+        //Hecho: Crear TypedQuery<Empleado> con JPQL
+        // Hecho: Obtener resultados y mostrarlos
         em.getTransaction().commit();
     }
 
@@ -141,7 +160,7 @@ public class App {
     public static void consulta3_EmpleadosDelAnyo(int anyo) {
         EntityManager em = con.getEM();
         em.getTransaction().begin();
-        
+    
         // TODO: Crear TypedQuery<Empleado> con JPQL y parámetro :anyo
         
         // TODO: Obtener resultados y mostrarlos
@@ -210,6 +229,23 @@ public class App {
                      System.out.println(d.toString());
              System.out.println("Asignados Empleados anteriores a 2025");
              em.getTransaction().commit();
+            }
+            
+            public static void anadeDatosaProyecto(){
+                EntityManager em = con.getEM();
+                em.getTransaction().begin();
+                Proyecto p = em.find(Proyecto.class, 1);
+                /*TypedQuery<Empleado> tq = em.createQuery(
+                   "Select e FROM Empleado e WHERE YEAR(e.fechaContrato) < :anyo", Empleado.class);
+                    tq.setParameter("anyo", 2024);
+                    List<Empleado> lista = tq.getResultList();
+                    for (Empleado e: lista) {
+                    p.addEmpleadoProyecto(e);
+                    }*/
+                    p.setDirectorProyecto(em.find(Empleado.class, 2));
+                    System.out.println("Asignados al proyecto Empleados del año <2024");
+                    em.getTransaction().commit();
+                   
             }
 
 }
