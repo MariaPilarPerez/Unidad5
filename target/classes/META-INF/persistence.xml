@@ -10,6 +10,7 @@
 
         <properties>
             <!-- Base de datos embebida -->
+            <!--<property name="javax.persistence.jdbc.url" value="objectdb:EmpleadosDepartamentoProyecto.odb"/>-->
             <property name="javax.persistence.jdbc.url" value="objectdb:EmpleadosDepartamentoProyecto.odb"/>
 
             <!-- Opcional: mostrar consultas -->

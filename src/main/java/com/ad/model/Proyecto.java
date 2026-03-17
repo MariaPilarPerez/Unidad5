@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+//import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -26,7 +27,7 @@ import javax.persistence.Table;
  * - directorProyecto: relación OneToOne con Empleado (un empleado solo puede ser jefe de un proyecto)
  * - losEmpleados: relación ManyToMany con Empleado (empleados que participan)
  * 
- * TODO:
+ * Hecho:
  * 1. Anotar la clase como @Entity
  * 2. Anotar idProyecto con @Id y @GeneratedValue
  * 3. Anotar directorProyecto con @OneToOne (cascade)
@@ -44,19 +45,22 @@ public class Proyecto {
     @Column(nullable=false)
     private String descripcion;
     
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(
+        fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "idDirectorProyecto", nullable = false)
     private Empleado directorProyecto;
     
     
     @ManyToMany(
+        //mappedBy="losProyectos",
     cascade = {CascadeType.PERSIST, CascadeType.MERGE},
     fetch = FetchType.LAZY)
     @JoinTable(
-        name = "Empleado_Proyecto",
-        joinColumns = @JoinColumn(name = "idProyecto"),
-        inverseJoinColumns = @JoinColumn(name = "idEmpleado")
+       name = "Empleado_Proyecto",
+       joinColumns = @JoinColumn(name = "idProyecto"),
+       inverseJoinColumns = @JoinColumn(name = "idEmpleado")
     )
+
     private Set<Empleado> losEmpleados = new HashSet<>();
 
     public Proyecto() {}
@@ -109,11 +113,12 @@ public class Proyecto {
     public void addEmpleadoProyecto(Empleado e){
         this.losEmpleados.add(e);
         e.getLosProyectos().add(this);
+
     }
 
     // Hecho: Implementar getters y setters
     
-    // TODO: Implementar addEmpleadoProyecto(Empleado e) - añadir empleado evitando duplicados
+    // Hecho: Implementar addEmpleadoProyecto(Empleado e) - añadir empleado evitando duplicados
     
     // Hecho: Implementar toString()
 }

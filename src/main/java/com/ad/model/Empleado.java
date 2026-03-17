@@ -14,7 +14,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -55,20 +54,21 @@ private LocalDate fechaContrato;
     
 @Transient
 private boolean malaActuacion;
+
     
 @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 @JoinColumn(name = "idDepartamento", nullable = false)
 private Departamento departamento;
     
-@ManyToMany(
+@ManyToMany(mappedBy = "losEmpleados",
         cascade = {CascadeType.PERSIST, CascadeType.MERGE}, // Propaga persist y merge
         fetch = FetchType.LAZY // Carga diferida (recomendado)
     )
-    @JoinTable(
+    /*@JoinTable(
         name = "Empleado_Proyecto",
         joinColumns = @JoinColumn(name = "idEmpleado"),
         inverseJoinColumns = @JoinColumn(name = "idProyecto")
-    )
+    )*/
         private Set<Proyecto> losProyectos = new HashSet<>();
     
     @Embedded

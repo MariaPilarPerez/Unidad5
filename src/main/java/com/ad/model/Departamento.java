@@ -24,7 +24,7 @@ import javax.persistence.Column;
  * - sede: String
  * - losEmpleados: relación OneToMany con Empleado
  * 
- * TODO:
+ * Hecho:
  * 1. Anotar la clase como @Entity
  * 2. Anotar idDepartamento con @Id y @GeneratedValue
  * 3. Anotar losEmpleados con @OneToMany (cascade, fetch)
@@ -47,7 +47,6 @@ public class Departamento {
         cascade = CascadeType.ALL,
         fetch = FetchType.LAZY
     )
-    
     private Set<Empleado> losEmpleados = new HashSet<>();
 
     public Departamento() {}
