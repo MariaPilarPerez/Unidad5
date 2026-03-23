@@ -47,7 +47,7 @@ public class Proyecto {
     
     @OneToOne(
         fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "idDirectorProyecto", nullable = false)
+    @JoinColumn(name = "idDirectorProyecto", nullable = true)
     private Empleado directorProyecto;
     
     
@@ -106,8 +106,8 @@ public class Proyecto {
         return "{" +
             " idProyecto='" + getIdProyecto() + "'" +
             ", descripcion='" + getDescripcion() + "'" +
-            ", directorProyecto='" + getDirectorProyecto() + "'" +
-            ", losEmpleados='" + getLosEmpleados() + "'" +
+            //", directorProyecto='" + getDirectorProyecto() + "'" +
+            //", losEmpleados='" + getLosEmpleados() + "'" +
             "}";
     }
     public void addEmpleadoProyecto(Empleado e){

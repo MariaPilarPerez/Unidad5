@@ -139,7 +139,7 @@ public class App {
     public static void consulta2_EmpleadosSinDepartamento() {
         EntityManager em = con.getEM();
         em.getTransaction().begin();
-        TypedQuery<Empleado> tq=em.createQuery("select e from Empleado e where e.departamento=null",Empleado.class);
+        TypedQuery<Empleado> tq=em.createQuery("select e from Empleado e where e.departamento is null",Empleado.class);
         List<Empleado> empleados = tq.getResultList();
         if (empleados.size()>0){
             System.out.println("---Empleados sin departamento asignado---");

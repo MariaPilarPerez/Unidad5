@@ -57,7 +57,7 @@ private boolean malaActuacion;
 
     
 @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-@JoinColumn(name = "idDepartamento", nullable = false)
+@JoinColumn(name = "idDepartamento", nullable = true)
 private Departamento departamento;
     
 @ManyToMany(mappedBy = "losEmpleados",
@@ -130,10 +130,16 @@ private Departamento departamento;
     @Override
     public String toString() {    //No muestro todos los datos asociados, para que no entre en bucle
         return "{" +
-            " idEmpleado='" + getIdEmpleado() + "'" +
-            ", nombre='" + getNombre() + "'" +
+            " idEmpleado: " + getIdEmpleado() + 
+            ", nombre: " + getNombre() +
+            ", Dirección: Calle " +getDireccion().getCalle()+", "+getDireccion().getNumero()+" "+getDireccion().getBloque()+
             ", fechaContrato='" + getFechaContrato() + "'" +
-            ", malaActuacion='" + isMalaActuacion() ;
+            (isMalaActuacion() ? ", Ha habido mala actuación " : "") +
+            (getDepartamento() == null ? "\nNo tiene Departamento asignado. " : "\nDepartamento asignado: " + getDepartamento() )
+            + "\nProyectos asignados: "+getLosProyectos().toString();
+        
+          
+
     }     
     public void addProyecto(Proyecto p){
             this.losProyectos.add(p);
